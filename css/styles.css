@@ -1,0 +1,57 @@
+.input-file{
+    display: flex;
+    align-items: center;
+}
+
+.make-a-file{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+.input-file .file-button{
+    --primary-color: #222;
+    --secondary-color: #ddd;
+    --shadow-color: #888;
+    display: inline-block;
+    margin: 0;
+    background-color: var(--primary-color);
+    outline: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: .5rem;
+    box-shadow: 3px 3px 8px var(--shadow-color);
+    border-radius: .25rem;
+    margin-right: .5rem;
+}
+
+.file-img{
+    width: 100%;
+    margin-top: .5rem;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+/* MD */
+@media(min-width: 768px){
+    .input-file{
+        width: 50%;
+        padding-right: .5rem;
+    }
+}
+
+/* LG */
+@media(min-width: 1024px){
+    .file-img{
+        width: 50%;
+    }
+}
+
+/* XL */
+@media(min-width: 1200px){
+    /**/
+}
