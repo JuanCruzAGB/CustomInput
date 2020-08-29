@@ -15,26 +15,28 @@ let InputFileMaker = {
                 reader.onload = function(){
                     img.src = reader.result;
                 }
-                reader.readAsDataURL(input.files[0]);
-                
-                let parent = input.parentNode;
-                let img;
-                if(!this.exist){
-                    this.exist = true;
-                    img = document.createElement('img');
-                    img.alt = 'Example image';
-                    img.classList.add('file-img');
-                }else{
-                    img = document.querySelector('.file-img');
+                if(input.files[0].type == 'image/png' || input.files[0].type == 'image/jpeg'){
+                    reader.readAsDataURL(input.files[0]);
+                    
+                    let parent = input.parentNode;
+                    let img;
+                    if(!this.exist){
+                        this.exist = true;
+                        img = document.createElement('img');
+                        img.alt = 'Example image';
+                        img.classList.add('file-img');
+                    }else{
+                        img = document.querySelector('.file-img');
+                    }
+                    if(!img.classList.contains('generated-image')){
+                        img.classList.add('generated-image');
+                        img.addEventListener('click', function(e){
+                            e.preventDefault();
+                            InputFileMaker.execute(input);
+                        });
+                    }
+                    parent.insertBefore(img, input);
                 }
-                if(!img.classList.contains('generated-image')){
-                    img.classList.add('generated-image');
-                    img.addEventListener('click', function(e){
-                        e.preventDefault();
-                        InputFileMaker.execute(input);
-                    });
-                }
-                parent.insertBefore(img, input);
             }else{
                 // PENDIENTE
             }
