@@ -11,15 +11,14 @@ let InputFileMaker = {
          */
         create(input){
             if(FileReader && input.files && input.files.length){
+                let parent = input.parentNode;
+                let img;
                 let reader = new FileReader();
                 reader.onload = function(){
                     img.src = reader.result;
                 }
                 if(input.files[0].type == 'image/png' || input.files[0].type == 'image/jpeg'){
                     reader.readAsDataURL(input.files[0]);
-                    
-                    let parent = input.parentNode;
-                    let img;
                     if(!this.exist){
                         this.exist = true;
                         img = document.createElement('img');
@@ -110,6 +109,7 @@ let InputFileMaker = {
             let span = document.createElement('span');
             span.innerHTML = input.dataset.notfound;
             span.classList.add('file-text');
+            span.title = input.dataset.notfound;
             div.appendChild(span);
             span.addEventListener('click', function(e){
                 e.preventDefault();

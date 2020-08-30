@@ -1,6 +1,7 @@
 .input-file{
     display: flex;
     align-items: center;
+    overflow-x: hidden;
 }
 
 .make-a-file{
@@ -27,6 +28,7 @@
     box-shadow: 3px 3px 8px var(--shadow-color);
     border-radius: .25rem;
     margin-right: .5rem;
+    min-width: fit-content;
 }
 
 .file-img{
