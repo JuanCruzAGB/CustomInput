@@ -37,7 +37,7 @@ let InputFileMaker = {
                     parent.insertBefore(img, input);
                 }
             }else{
-                // PENDIENTE
+                // TODO PENDIENTE
             }
         },
         /**
