@@ -4,7 +4,7 @@
     overflow-x: hidden;
 }
 
-.make-a-file{
+.input-maked{
     position: fixed;
     top: 0;
     left: 0;
@@ -13,16 +13,16 @@
     visibility: hidden;
 }
 
-.input-file .file-button{
-    --primary-color: #222;
-    --secondary-color: #ddd;
+.input-file .input-button{
+    --inputfilemaker-color-one: #222;
+    --inputfilemaker-color-two: #ddd;
     --shadow-color: #888;
     display: inline-block;
     margin: 0;
-    background-color: var(--primary-color);
+    background-color: var(--inputfilemaker-color-one);
     outline: none;
     border: none;
-    color: var(--secondary-color);
+    color: var(--inputfilemaker-color-two);
     cursor: pointer;
     padding: .5rem;
     box-shadow: 3px 3px 8px var(--shadow-color);
@@ -31,7 +31,7 @@
     min-width: fit-content;
 }
 
-.file-img{
+.input-img{
     width: 100%;
     margin-top: .5rem;
     border-radius: .25rem;
@@ -40,17 +40,12 @@
 
 /* * MD */
 @media(min-width: 768px){
-    .input-file{
-        width: 50%;
-        padding-right: .5rem;
-    }
+    /**/
 }
 
 /* * LG */
 @media(min-width: 1024px){
-    .file-img{
-        width: 50%;
-    }
+    /**/
 }
 
 /* * XL */
