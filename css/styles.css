@@ -38,7 +38,7 @@
     cursor: pointer;
 }
 
-/* MD */
+/* * MD */
 @media(min-width: 768px){
     .input-file{
         width: 50%;
@@ -46,14 +46,14 @@
     }
 }
 
-/* LG */
+/* * LG */
 @media(min-width: 1024px){
     .file-img{
         width: 50%;
     }
 }
 
-/* XL */
+/* * XL */
 @media(min-width: 1200px){
     /**/
 }
