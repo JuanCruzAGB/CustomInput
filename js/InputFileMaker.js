@@ -213,7 +213,6 @@ export class InputFileMaker{
     update(){
         for(let i = 0; i < this.html.parentNode.children.length; i++){
             if(this.html.parentNode.children[i].classList.contains('input-file')){
-                console.log(this.html.parentNode);
                 if(this.html.files.length){
                     this.html.parentNode.children[i].children[1].innerHTML = this.html.files[0].name;
                 }else{
