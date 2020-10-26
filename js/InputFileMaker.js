@@ -10,7 +10,13 @@ export class InputFileMaker{
      * @memberof InputFileMaker
      */
     constructor(properties = {
-        id: 'input-file-1'
+        id: 'input-file-1',
+        callback: {
+            functionName: function(params) { console.log(params); },
+            params: [
+                //
+            ],
+        }
     }, status = {
         image: false,
     }){
@@ -26,10 +32,19 @@ export class InputFileMaker{
      * @memberof InputFileMaker
      */
     setProperties(properties = {
-        id: 'input-file-1'
+        id: 'input-file-1',
+        callback: {
+            functionName: function(params) { console.log(params); },
+            params: [
+                //
+            ],
+        }
     }){
         this.properties = {};
         this.setID(properties);
+        if(properties.hasOwnProperty('callback')){
+            this.setCallback(properties);
+        }
     }
 
     /**
@@ -53,6 +68,22 @@ export class InputFileMaker{
         id: 'input-file-1'
     }){
         this.properties.id = properties.id;
+    }
+
+    /**
+     * * Set the InputFileMaker callback.
+     * @param {object} properties - InputFileMaker properties.
+     * @memberof InputFileMaker
+     */
+    setCallback(properties = {
+        callback: {
+            functionName: function(params) { console.log(params); },
+            params: [
+                //
+            ],
+        }
+    }){
+        this.properties.callback = properties.callback;
     }
 
     /**
@@ -179,10 +210,10 @@ export class InputFileMaker{
         let parent = this.html.parentNode;
         let img = document.createElement('img');
 
-        if(FileReader && this.html.files && this.html.files.length){
+        if(FileReader && this.files && this.files.length){
             let reader = new FileReader();
-            if(this.html.files[0].type == 'image/png' || this.html.files[0].type == 'image/jpeg'){
-                reader.readAsDataURL(this.html.files[0]);
+            if(this.files[0].type == 'image/png' || this.files[0].type == 'image/jpeg'){
+                reader.readAsDataURL(this.files[0]);
                 if(!this.status.created){
                     this.status.created = true;
                     img = document.createElement('img');
@@ -213,13 +244,17 @@ export class InputFileMaker{
     update(){
         for(let i = 0; i < this.html.parentNode.children.length; i++){
             if(this.html.parentNode.children[i].classList.contains('input-file')){
-                if(this.html.files.length){
-                    this.html.parentNode.children[i].children[1].innerHTML = this.html.files[0].name;
+                this.files = this.html.files;
+                if(this.files.length){
+                    this.html.parentNode.children[i].children[1].innerHTML = this.files[0].name;
                 }else{
                     this.html.parentNode.children[i].children[1].innerHTML = this.html.dataset.notfound;
                 }
             }
         }
+        let params = this.properties.callback.params;
+        params.inputfile = this;
+        this.properties.callback.functionName(params);
     }
     
     /**
