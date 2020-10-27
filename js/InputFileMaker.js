@@ -12,7 +12,7 @@ export class InputFileMaker{
     constructor(properties = {
         id: 'input-file-1',
         callback: {
-            functionName: function(params) { console.log(params); },
+            functionName: function(params) { /* console.log(params); */ },
             params: [
                 //
             ],
@@ -34,7 +34,7 @@ export class InputFileMaker{
     setProperties(properties = {
         id: 'input-file-1',
         callback: {
-            functionName: function(params) { console.log(params); },
+            functionName: function(params) { /* console.log(params); */ },
             params: [
                 //
             ],
@@ -42,9 +42,7 @@ export class InputFileMaker{
     }){
         this.properties = {};
         this.setID(properties);
-        if(properties.hasOwnProperty('callback')){
-            this.setCallback(properties);
-        }
+        this.setCallback(properties);
     }
 
     /**
@@ -77,13 +75,22 @@ export class InputFileMaker{
      */
     setCallback(properties = {
         callback: {
-            functionName: function(params) { console.log(params); },
+            functionName: function(params) { /* console.log(params); */ },
             params: [
                 //
             ],
         }
     }){
-        this.properties.callback = properties.callback;
+        if(properties.hasOwnProperty('callback')){
+            this.properties.callback = properties.callback;
+        }else{
+            this.properties.callback = {
+                functionName: function(params) { /* console.log(params); */ },
+                params: [
+                    //
+                ],
+            };
+        }
     }
 
     /**
