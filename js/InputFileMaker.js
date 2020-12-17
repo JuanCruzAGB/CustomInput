@@ -1,107 +1,465 @@
+// ? Local repository
+import { HTMLCreator as HTMLCreatorJS } from "../../HTMLCreatorJS/js/HTMLCreator.js";
+
 /**
  * * InputFileMaker makes an excellent input type file.
  * @export
  * @class InputFileMaker
+ * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
 export class InputFileMaker{
     /**
      * * Creates an instance of InputFileMaker.
-     * @param {object} properties - InputFileMaker properties.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String} [properties.id] InputFileMaker ID.
+     * @param {String} [properties.notFoundMessage] InputFileMaker not found message.
+     * @param {String} [properties.text] InputFileMaker button text.
+     * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.generate] InputFileMaker create input boolean.
+     * @param {Boolean} [states.disabled] InputFileMaker disabled boolean.
+     * @param {Boolean} [states.image] InputFileMaker create image boolean.
+     * @param {Boolean} [states.multiple] InputFileMaker accept multiple files boolean.
+     * @param {Object} [callback] InputFileMaker callback:
+     * @param {Function} [callback.function] InputFileMaker callback function.
+     * @param {Object} [callback.params] InputFileMaker callback params.
+     * @param {Object} [button] InputFileMaker button properties.
      * @memberof InputFileMaker
      */
     constructor(properties = {
         id: 'input-file-1',
-        callback: {
-            functionName: function(params) { /* console.log(params); */ },
-            params: [
-                //
-            ],
-        }
-    }, status = {
+        notFoundMessage: 'File not chosen',
+        text: 'Select file',
+        accept: [],
+    }, states = {
+        generate: false,
+        disabled: false,
         image: false,
-    }){
+        multiple: false,
+    }, callback = {
+        function: function(){ /* console.log('clicked') */ },
+        params: {
+            //
+        },
+    }, button = {}){
         this.setProperties(properties);
-        this.setStatus(status);
-        this.setHTML();
+        this.setStates(states);
+        this.setCallback(callback);
+        this.setButton(button);
+        this.setSpan();
+        this.checkGenerateStatus();
         this.checkImageStatus();
     }
 
     /**
      * * Set the InputFileMaker properties.
-     * @param {object} properties - InputFileMaker properties.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String} [properties.id] InputFileMaker ID.
+     * @param {String} [properties.notFoundMessage] InputFileMaker not found message.
+     * @param {String} [properties.text] InputFileMaker button text.
+     * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
      * @memberof InputFileMaker
      */
     setProperties(properties = {
         id: 'input-file-1',
-        callback: {
-            functionName: function(params) { /* console.log(params); */ },
-            params: [
-                //
-            ],
-        }
+        notFoundMessage: 'File not chosen',
+        text: 'Select file',
+        accept: [],
     }){
         this.properties = {};
-        this.setID(properties);
-        this.setCallback(properties);
+        this.setIDProperty(properties);
+        this.setNotFoundMessageProperty(properties);
+        this.setTextProperty(properties);
+        this.setAcceptProperty(properties);
     }
 
     /**
-     * * Set the InputFileMaker status.
-     * @param {object} status - InputFileMaker status.
+     * * Returns the InputFileMaker properties or an specific property.
+     * @param {String} [name] Property name.
+     * @returns {Object|*}
      * @memberof InputFileMaker
      */
-    setStatus(status = {
-        image: false,
-    }){
-        this.status = {};
-        this.setImage(status);
+    getProperties(name = ''){
+        if (name && name != '') {
+            return this.properties[name];
+        } else {
+            return this.properties;
+        }
+    }
+
+    /**
+     * * Check if there is a property.
+     * @param {String} name Property name.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    hasProperty(name = ''){
+        if (this.properties.hasOwnProperty(name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * * Change a property value.
+     * @param {String} name Property name.
+     * @param {*} value Property value.
+     * @memberof InputFileMaker
+     */
+    changeProperty(name = '', value = ''){
+        if (this.hasProperty(name)) {
+            this.properties[name] = value;
+        }
+        switch (name) {
+            case 'title':
+                if (this.hasProperty('title')) {
+                    this.html.title = this.getProperties('title');
+                }
+                break;
+        }
     }
 
     /**
      * * Set the InputFileMaker ID.
-     * @param {object} properties - InputFileMaker properties.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String} [properties.id] InputFileMaker ID.
      * @memberof InputFileMaker
      */
-    setID(properties = {
-        id: 'input-file-1'
+    setIDProperty(properties = {
+        id: 'input-file-1',
     }){
-        this.properties.id = properties.id;
+        if (properties.hasOwnProperty('id')) {
+            this.properties.id = properties.id;
+        } else {
+            this.properties.id = 'input-file-1';
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker ID.
+     * @returns {String}
+     * @memberof InputFileMaker
+     */
+    getIDProperty(){
+        return this.properties.id;
+    }
+
+    /**
+     * * Set the InputFileMaker not found message.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String} [properties.notFoundMessage] InputFileMaker not found message.
+     * @memberof InputFileMaker
+     */
+    setNotFoundMessageProperty(properties = {
+        notFoundMessage: 'File not chosen',
+    }){
+        if (properties.hasOwnProperty('notFoundMessage')) {
+            this.properties.notFoundMessage = properties.notFoundMessage;
+        } else {
+            this.properties.notFoundMessage = 'File not chosen';
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker not found message.
+     * @returns {String}
+     * @memberof InputFileMaker
+     */
+    getNotFoundMessageProperty(){
+        return this.properties.notFoundMessage;
+    }
+
+    /**
+     * * Set the InputFileMaker text.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String} [properties.notFoundMessage] InputFileMaker text.
+     * @memberof InputFileMaker
+     */
+    setTextProperty(properties = {
+        text: 'Select file',
+    }){
+        if (properties.hasOwnProperty('text')) {
+            this.properties.text = properties.text;
+        } else {
+            this.properties.text = 'Select file';
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker text.
+     * @returns {String}
+     * @memberof InputFileMaker
+     */
+    getTextProperty(){
+        return this.properties.text;
+    }
+
+    /**
+     * * Set the InputFileMaker input mimetype accepted.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
+     * @memberof InputFileMaker
+     */
+    setAcceptProperty(properties = {
+        accept: [],
+    }){
+        if (properties.hasOwnProperty('accept')) {
+            this.properties.accept = properties.accept;
+        } else {
+            this.properties.accept = [];
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker input mimetype accepted.
+     * @returns {String}
+     * @memberof InputFileMaker
+     */
+    getAcceptProperty(){
+        return this.properties.accept;
+    }
+
+    /**
+     * * Set the InputFileMaker states.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.generate] InputFileMaker create input boolean.
+     * @param {Boolean} [states.disabled] InputFileMaker disabled boolean.
+     * @param {Boolean} [states.image] InputFileMaker create image boolean.
+     * @param {Boolean} [states.multiple] InputFileMaker accept multiple files boolean.
+     * @memberof InputFileMaker
+     */
+    setStates(states = {
+        generate: false,
+        disabled: false,
+        image: false,
+        multiple: false,
+    }){
+        this.states = {};
+        this.setGenerateStatus(states);
+        this.setDisabledStatus(states);
+        this.setImageStatus(states);
+        this.setCreatedStatus(states);
+        this.setMultipleStatus(states);
+    }
+
+    /**
+     * * Returns the InputFileMaker states or an specific states.
+     * @param {String} [property] States name.
+     * @returns {Object|*}
+     * @memberof InputFileMaker
+     */
+    getStates(property = ''){
+        if (property && property != '') {
+            return this.states[property];
+        } else {
+            return this.states;
+        }
+    }
+
+    /**
+     * * Check if there is a status.
+     * @param {String} name Status name.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    hasStates(name = ''){
+        if (this.status.hasOwnProperty(name)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * * Change a status value.
+     * @param {String} name Status name.
+     * @param {*} value Status value.
+     * @memberof InputFileMaker
+     */
+    changeStatus(name = '', value = ''){
+        if (this.hasStates(name)) {
+            this.states[name] = value;
+        }
+        switch (name) {
+            default:
+                break;
+        }
+    }
+
+    /**
+     * * Set the InputFileMaker create input boolean status.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.generate] InputFileMaker create input boolean.
+     * @memberof InputFileMaker
+     */
+    setGenerateStatus(states = {
+        generate: false,
+    }){
+        if (states.hasOwnProperty('generate')) {
+            this.states.generate = states.generate;
+        } else {
+            this.states.generate = false;
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker create input boolean status.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    getGenerateStatus(){
+        return this.states.generate;
+    }
+
+    /**
+     * * Set the InputFileMaker disabled boolean status.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.disabled] InputFileMaker disabled boolean.
+     * @memberof InputFileMaker
+     */
+    setDisabledStatus(states = {
+        disabled: false,
+    }){
+        if (states.hasOwnProperty('disabled')) {
+            this.states.disabled = states.disabled;
+        } else {
+            this.states.disabled = false;
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker disabled boolean status.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    getDisabledStatus(){
+        return this.states.disabled;
+    }
+
+    /**
+     * * Check if the InputFileMaker has or not the input status.
+     * @memberof InputFileMaker
+     */
+    checkGenerateStatus(){
+        if (this.getStates('input')) {
+            this.setHTML();
+        } else {
+            this.setInput();
+        }
+    }
+
+    /**
+     * * Set the InputFileMaker create image boolean status.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.image] InputFileMaker create image boolean.
+     * @memberof InputFileMaker
+     */
+    setImageStatus(states = {
+        image: false,
+    }){
+        if (states.hasOwnProperty('image')) {
+            this.states.image = states.image;
+        } else {
+            this.states.image = false;
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker create image boolean status.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    getImageStatus(){
+        return this.states.image;
+    }
+
+    /**
+     * * Check if the InputFileMaker has or not the image status.
+     * @memberof InputFileMaker
+     */
+    checkImageStatus(){
+        if (this.getStates('image')) {
+            this.setImage();
+        }
+    }
+
+    /**
+     * * Set the InputFileMaker created boolean status.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.created] InputFileMaker created boolean.
+     * @memberof InputFileMaker
+     */
+    setCreatedStatus(states = {
+        created: false,
+    }){
+        if (states.hasOwnProperty('created')) {
+            this.states.created = states.created;
+        } else {
+            this.states.created = false;
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker created boolean status.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    getCreatedStatus(){
+        return this.states.created;
+    }
+
+    /**
+     * * Set the InputFileMaker accept multiple files boolean.
+     * @param {Object} [states] InputFileMaker states:
+     * @param {Boolean} [states.multiple] InputFileMaker accept multiple files boolean.
+     * @memberof InputFileMaker
+     */
+    setMultipleStatus(states = {
+        multiple: false,
+    }){
+        if (states.hasOwnProperty('multiple')) {
+            this.states.multiple = states.multiple;
+        } else {
+            this.states.multiple = false;
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker accept multiple files boolean.
+     * @returns {Boolean}
+     * @memberof InputFileMaker
+     */
+    getMultipleStatus(){
+        return this.states.multiple;
     }
 
     /**
      * * Set the InputFileMaker callback.
-     * @param {object} properties - InputFileMaker properties.
+     * @param {Object} [callback] InputFileMaker callback:
+     * @param {Function} [callback.function] InputFileMaker callback function.
+     * @param {Object} [callback.params] InputFileMaker callback params.
      * @memberof InputFileMaker
      */
-    setCallback(properties = {
-        callback: {
-            functionName: function(params) { /* console.log(params); */ },
-            params: [
-                //
-            ],
-        }
+    setCallback(callback = {
+        function: function(params) { /* console.log(params); */ },
+        params: [
+            //
+        ],
     }){
-        if(properties.hasOwnProperty('callback')){
-            this.properties.callback = properties.callback;
-        }else{
-            this.properties.callback = {
-                functionName: function(params) { /* console.log(params); */ },
-                params: [
-                    //
-                ],
-            };
-        }
+        this.callback = {
+            function: (callback.hasOwnProperty('function')) ? callback.function : function(){ /* console.log('clicked') */ },
+            params: (callback.hasOwnProperty('params')) ? callback.params : {},
+        };
     }
 
     /**
-     * * Set the InputFileMaker image status.
-     * @param {object} status - InputFileMaker status.
+     * * Returns the InputFileMaker callback.
+     * @returns {Object}
      * @memberof InputFileMaker
      */
-    setImage(status = {
-        image: false,
-    }){
-        this.status.image = status.image;
+    getCallback(){
+        return this.callback;
     }
 
     /**
@@ -110,138 +468,200 @@ export class InputFileMaker{
      */
     setHTML(){
         let instance = this;
-        this.html = document.querySelector(`#${this.properties.id}`);
-        if(!this.html.classList.contains('input-maked')){
-            this.html.classList.add('input-maked');
+        this.html = document.querySelector(`#${ this.getProperties('id') }`);
+        if (!this.html.classList.contains('input-transformed')) {
+            this.html.classList.add('input-transformed');
         }
+
         this.html.addEventListener('change', function(){
             instance.update();
-            if(instance.status.image){
-                if(this.files.length == 0){
+            if (instance.getStates('image')) {
+                if (this.files.length == 0) {
                     instance.remove();
                 }
-                instance.makeImage();
+                instance.checkImageStatus();
             }
         });
-        this.makeInput();
-    }
 
-    /**
-     * * Make the better "<input>".
-     * @memberof InputFileMaker
-     */
-    makeInput(){
-        let instance = this;
-        let parent = this.html.parentNode;
         let div = document.createElement('div');
         div.classList.add('input-file');
-        parent.insertBefore(div, this.html);
-            let button = document.createElement('button');
-            div.appendChild(button);
-            if(this.html.dataset.text){
-                button.innerHTML = this.html.dataset.text;
-            }else{
-                button.innerHTML = 'Select file';
-            }
-            button.classList.add('input-button');
-            button.addEventListener('click', function(e){
-                e.preventDefault();
-                instance.execute();
-            });
-            let span = document.createElement('span');
-            if(this.html.dataset.notfound){
-                span.innerHTML = this.html.dataset.notfound;
-                span.title = this.html.dataset.notfound;
-            }else{
-                span.innerHTML = 'File was not choosen';
-                span.title = 'File was not choosen';
-            }
-            span.classList.add('input-text');
-            div.appendChild(span);
-            span.addEventListener('click', function(e){
-                e.preventDefault();
-                instance.execute();
-            });
+        let parent = this.getHTML().parentNode;
+        parent.insertBefore(div, this.getHTML());
+
+        div.appendChild(this.button.getHTML());
+        div.appendChild(this.span.getHTML());
     }
 
     /**
-     * * Execute the <input> click event.
+     * * Returns the <input> HTML Element.
+     * @returns {HTMLElement}
      * @memberof InputFileMaker
      */
-    execute(){
-        this.html.click();
+    getHTML(){
+        return this.html;
     }
 
     /**
-     * * Make a <img>.
+     * * Set the InputFileMaker Input.
      * @memberof InputFileMaker
      */
-    makeImage(){
-        switch(typeof this.status.image){
+    setInput(){
+        let instance = this;
+
+        this.input = new HTMLCreatorJS('input', {
+            properties: {
+                id: this.getProperties('id'),
+                type: 'file',
+                name: this.getProperties('name'),
+                classes: [],
+                accept: this.getProperties('accept'),
+        }, states: {
+            multiple: this.getStates('multiple'),
+        }});
+
+        this.input.getHTML().addEventListener('change', function(){
+            instance.update();
+            if (instance.getStates('image')) {
+                if (this.files.length == 0) {
+                    instance.remove();
+                }
+                instance.checkImageStatus();
+            }
+        });
+    }
+
+    /**
+     * * Returns the InputFileMaker Input.
+     * @returns {Input}
+     * @memberof InputFileMaker
+     */
+    getInput(){
+        return this.input;
+    }
+
+    /**
+     * * Set the InputFileMaker Button.
+     * @param {Object} [button] InputFileMaker button properties.
+     * @memberof InputFileMaker
+     */
+    setButton(button = {}){
+        this.button = new HTMLCreatorJS('button', {
+            properties: ((button.hasOwnProperty('properties')) ? button.properties : {
+                id: 'button-1',
+                title: this.getProperties('text'),
+                classes: ['input-button'],
+            }), states: {
+                preventDefault: true,
+                disabled: this.getStates('disabled'),
+            }, callback: {
+                function: InputFileMaker.execute,
+                params: {
+                    inputfilemaker: this,
+                },
+        }, innerHTML: ((button.hasOwnProperty('innerHTML')) ? button.innerHTML : new HTMLCreatorJS('span', {
+            properties: {
+                //
+            }, innerHTML: this.getProperties('text'),
+        }).getHTML())});
+    }
+
+    /**
+     * * Returns the InputFileMaker Button.
+     * @returns {Button}
+     * @memberof InputFileMaker
+     */
+    getButton(){
+        return this.button;
+    }
+
+    /**
+     * * Set the InputFileMaker Span.
+     * @memberof InputFileMaker
+     */
+    setSpan(){
+        let instance = this;
+
+        this.span = new HTMLCreatorJS('span', {
+            properties: {
+                id: 'message-1',
+                classes: ['input-text'],
+        }, innerHTML: this.getProperties('notFoundMessage'),});
+
+        this.span.getHTML().addEventListener('click', function(e){
+            e.preventDefault();
+            InputFileMaker.execute({
+                inputfilemaker: instance,
+            });
+        });
+    }
+
+    /**
+     * * Returns the InputFileMaker Span.
+     * @returns {Span}
+     * @memberof InputFileMaker
+     */
+    getSpan(){
+        return this.span;
+    }
+
+    /**
+     * * Set the InputFileMaker Image.
+     * @memberof InputFileMaker
+     */
+    setImage(){
+        let instance = this;
+        let parent = this.getHTML().parentNode;
+
+        switch(typeof this.getStates('image')){
             case 'string':
-                this.createImageByString();
+                this.image = new HTMLCreatorJS('img', {
+                    properties: {
+                        id: 'img-1',
+                        url: this.getStates('image'),
+                        name: 'Image genereted with InputFileMakerJS',
+                        classes: ['input-img', 'generated-image'],
+                }});
+                parent.insertBefore(this.image.getHTML(), this.getHTML());
                 break;
             default:
-                this.createImageByFileReader();
+                if (FileReader && this.files && this.files.length) {
+                    let reader = new FileReader();
+
+                    if (this.files[0].type == 'image/png' || this.files[0].type == 'image/jpeg') {
+                        reader.readAsDataURL(this.files[0]);
+                        this.image = new HTMLCreatorJS('img', {
+                            properties: {
+                                id: 'img-1',
+                                url: this.getStates('image'),
+                                name: 'Image genereted with InputFileMakerJS',
+                                classes: ['input-img', 'generated-image'],
+                        }});
+                    }
+
+                    reader.onload = function(){
+                        this.image.changeProperty('url', reader.result);
+                        parent.insertBefore(this.image.getHTML(), instance.html);
+                    }
+                }
                 break;
         }
-    }
-
-    /**
-     * * Create a <img> by a string given.
-     * @memberof InputFileMaker
-     */
-    createImageByString(){
-        let instance = this;
-        let parent = this.html.parentNode;
-        let img = document.createElement('img');
-        
-        this.status.created = true;
-        img.alt = 'Example image';
-        img.classList.add('input-img', 'generated-image');
-        img.addEventListener('click', function(e){
+                
+        this.image.getHTML().addEventListener('click', function(e){
             e.preventDefault();
-            instance.execute();
+            InputFileMaker.execute({
+                inputfilemaker: instance,
+            });
         });
-        parent.insertBefore(img, this.html);
-
-        img.src = this.status.image;
+        this.changeStatus('created', true);
     }
 
     /**
-     * * Create a <img> by a FileReader.
+     * * Returns the InputFileMaker Image.
+     * @returns {Image}
      * @memberof InputFileMaker
      */
-    createImageByFileReader(){
-        let instance = this;
-        let parent = this.html.parentNode;
-        let img = document.createElement('img');
-
-        if(FileReader && this.files && this.files.length){
-            let reader = new FileReader();
-            if(this.files[0].type == 'image/png' || this.files[0].type == 'image/jpeg'){
-                reader.readAsDataURL(this.files[0]);
-                if(!this.status.created){
-                    this.status.created = true;
-                    img = document.createElement('img');
-                    img.alt = 'Example image';
-                    img.classList.add('input-img');
-                }else{
-                    img = document.querySelector('.input-img');
-                }
-                if(!img.classList.contains('generated-image')){
-                    img.classList.add('generated-image');
-                    img.addEventListener('click', function(e){
-                        e.preventDefault();
-                        instance.execute();
-                    });
-                }
-            }
-            reader.onload = function(){
-                img.src = reader.result;
-                parent.insertBefore(img, instance.html);
-            }
-        }
+    getImage(){
+        return this.image;
     }
 
     /**
@@ -249,40 +669,44 @@ export class InputFileMaker{
      * @memberof InputFileMaker
      */
     update(){
-        for(let i = 0; i < this.html.parentNode.children.length; i++){
-            if(this.html.parentNode.children[i].classList.contains('input-file')){
-                this.files = this.html.files;
-                if(this.files.length){
-                    this.html.parentNode.children[i].children[1].innerHTML = this.files[0].name;
-                }else{
-                    this.html.parentNode.children[i].children[1].innerHTML = this.html.dataset.notfound;
-                }
-            }
+        if (this.getStates('generate')) {
+            this.files = this.getInput().getHTML().files;
+        } else {
+            this.files = this.getHTML().files;
         }
-        let params = this.properties.callback.params;
-        params.inputfile = this;
-        this.properties.callback.functionName(params);
+        if (this.files.length) {
+            this.getSpan().getHTML().innerHTML = this.files[0].name;
+        } else {
+            this.getSpan().getHTML().innerHTML = this.getProperties('notFoundMessage');
+        }
+        let params = this.getCallback().params;
+        params.inputfilemaker = this;
+        this.getCallback().function(params);
     }
     
     /**
-     * * Remove the <img>.
+     * * Remove the image.
      * @memberof InputFileMaker
      */
     remove(){
-        let parent = this.html.parentNode;
-        if(document.querySelector('.file-img.generated-image')){
-            parent.removeChild(document.querySelector('.file-img.generated-image'));
+        let parent = this.getHTML().parentNode;
+        if (this.getStates('created')) {
+            this.changeStatus('created', false);
+            parent.removeChild(this.image.getHTML());
+            delete this.image;
         }
-        this.exist = false;
     }
 
     /**
-     * * Check if the InputFileMaker has or not the image status.
+     * * Execute the <input> click event.
+     * @param {Object} params Execution parameters.
      * @memberof InputFileMaker
      */
-    checkImageStatus(){
-        if(this.status.image){
-            this.makeImage();
+    static execute(params = {}){
+        if (params.inputfilemaker.getStates('generate')) {
+            params.inputfilemaker.getInput().getHTML().click();
+        } else {
+            params.inputfilemaker.getHTML().click();
         }
     }
 };
