@@ -1,4 +1,4 @@
-// ? Local repository
+// ? External repository
 import { HTMLCreator as HTMLCreatorJS } from "../../HTMLCreatorJS/js/HTMLCreator.js";
 
 /**
@@ -15,6 +15,7 @@ export class InputFileMaker{
      * @param {String} [properties.notFoundMessage] InputFileMaker not found message.
      * @param {String} [properties.text] InputFileMaker button text.
      * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
+     * @param {String} [properties.name] InputFileMaker input name.
      * @param {Object} [states] InputFileMaker states:
      * @param {Boolean} [states.generate] InputFileMaker create input boolean.
      * @param {Boolean} [states.disabled] InputFileMaker disabled boolean.
@@ -31,6 +32,7 @@ export class InputFileMaker{
         notFoundMessage: 'File not chosen',
         text: 'Select file',
         accept: [],
+        name: 'file',
     }, states = {
         generate: false,
         disabled: false,
@@ -58,6 +60,7 @@ export class InputFileMaker{
      * @param {String} [properties.notFoundMessage] InputFileMaker not found message.
      * @param {String} [properties.text] InputFileMaker button text.
      * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
+     * @param {String} [properties.name] InputFileMaker input name.
      * @memberof InputFileMaker
      */
     setProperties(properties = {
@@ -65,12 +68,15 @@ export class InputFileMaker{
         notFoundMessage: 'File not chosen',
         text: 'Select file',
         accept: [],
+        name: 'file',
     }){
         this.properties = {};
         this.setIDProperty(properties);
         this.setNotFoundMessageProperty(properties);
         this.setTextProperty(properties);
         this.setAcceptProperty(properties);
+        this.setNotFoundMessageProperty(properties);
+        this.setNameProperty(properties);
     }
 
     /**
@@ -218,6 +224,31 @@ export class InputFileMaker{
      */
     getAcceptProperty(){
         return this.properties.accept;
+    }
+
+    /**
+     * * Set the InputFileMaker input name.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String} [properties.name] InputFileMaker input name.
+     * @memberof InputFileMaker
+     */
+    setNameProperty(properties = {
+        name: 'file',
+    }){
+        if (properties.hasOwnProperty('name')) {
+            this.properties.name = properties.name;
+        } else {
+            this.properties.name = 'file';
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker input name.
+     * @returns {String}
+     * @memberof InputFileMaker
+     */
+    getNameProperty(){
+        return this.properties.name;
     }
 
     /**
@@ -515,8 +546,8 @@ export class InputFileMaker{
                 name: this.getProperties('name'),
                 classes: [],
                 accept: this.getProperties('accept'),
-        }, states: {
-            multiple: this.getStates('multiple'),
+            }, states: {
+                multiple: this.getStates('multiple'),
         }});
 
         this.input.getHTML().addEventListener('change', function(){
