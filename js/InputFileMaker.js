@@ -16,6 +16,7 @@ export class InputFileMaker{
      * @param {String} [properties.text] InputFileMaker button text.
      * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
      * @param {String} [properties.name] InputFileMaker input name.
+     * @param {String[]} [properties.classes] InputFileMaker input class names.
      * @param {Object} [states] InputFileMaker states:
      * @param {Boolean} [states.generate] InputFileMaker create input boolean.
      * @param {Boolean} [states.disabled] InputFileMaker disabled boolean.
@@ -33,6 +34,7 @@ export class InputFileMaker{
         text: 'Select file',
         accept: [],
         name: 'file',
+        classes: [],
     }, states = {
         generate: false,
         disabled: false,
@@ -61,6 +63,7 @@ export class InputFileMaker{
      * @param {String} [properties.text] InputFileMaker button text.
      * @param {String[]} [properties.accept] InputFileMaker input mimetype accepted.
      * @param {String} [properties.name] InputFileMaker input name.
+     * @param {String[]} [properties.classes] InputFileMaker input class names.
      * @memberof InputFileMaker
      */
     setProperties(properties = {
@@ -69,6 +72,7 @@ export class InputFileMaker{
         text: 'Select file',
         accept: [],
         name: 'file',
+        classes: [],
     }){
         this.properties = {};
         this.setIDProperty(properties);
@@ -77,6 +81,7 @@ export class InputFileMaker{
         this.setAcceptProperty(properties);
         this.setNotFoundMessageProperty(properties);
         this.setNameProperty(properties);
+        this.setClassesProperty(properties);
     }
 
     /**
@@ -252,6 +257,31 @@ export class InputFileMaker{
     }
 
     /**
+     * * Set the InputFileMaker input class names.
+     * @param {Object} [properties] InputFileMaker properties:
+     * @param {String[]} [properties.classes] InputFileMaker input class names.
+     * @memberof InputFileMaker
+     */
+    setClassesProperty(properties = {
+        classes: [],
+    }){
+        if (properties.hasOwnProperty('classes')) {
+            this.properties.classes = properties.classes;
+        } else {
+            this.properties.classes = [];
+        }
+    }
+
+    /**
+     * * Returns the InputFileMaker class names.
+     * @returns {Array}
+     * @memberof InputFileMaker
+     */
+    getClassesProperty(){
+        return this.properties.classes;
+    }
+
+    /**
      * * Set the InputFileMaker states.
      * @param {Object} [states] InputFileMaker states:
      * @param {Boolean} [states.generate] InputFileMaker create input boolean.
@@ -295,7 +325,7 @@ export class InputFileMaker{
      * @memberof InputFileMaker
      */
     hasStates(name = ''){
-        if (this.status.hasOwnProperty(name)) {
+        if (this.states.hasOwnProperty(name)) {
             return true;
         } else {
             return false;
@@ -544,7 +574,7 @@ export class InputFileMaker{
                 id: this.getProperties('id'),
                 type: 'file',
                 name: this.getProperties('name'),
-                classes: [],
+                classes: this.getProperties('classes'),
                 accept: this.getProperties('accept'),
             }, states: {
                 multiple: this.getStates('multiple'),
