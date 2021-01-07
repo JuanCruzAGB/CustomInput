@@ -49,6 +49,7 @@ export class InputFileMaker{
         this.setProperties(properties);
         this.setStates(states);
         this.setCallback(callback);
+        this.setInputs();
         this.setButton(button);
         this.setSpan();
         this.checkGenerateStatus();
@@ -374,6 +375,16 @@ export class InputFileMaker{
     }
 
     /**
+     * * Check if the InputFileMaker has or not the input status.
+     * @memberof InputFileMaker
+     */
+    checkGenerateStatus(){
+        if (!this.getStates('generate')) {
+            this.setHTML();
+        }
+    }
+
+    /**
      * * Set the InputFileMaker disabled boolean status.
      * @param {Object} [states] InputFileMaker states:
      * @param {Boolean} [states.disabled] InputFileMaker disabled boolean.
@@ -396,18 +407,6 @@ export class InputFileMaker{
      */
     getDisabledStatus(){
         return this.states.disabled;
-    }
-
-    /**
-     * * Check if the InputFileMaker has or not the input status.
-     * @memberof InputFileMaker
-     */
-    checkGenerateStatus(){
-        if (this.getStates('input')) {
-            this.setHTML();
-        } else {
-            this.setInput();
-        }
     }
 
     /**
@@ -535,13 +534,7 @@ export class InputFileMaker{
         }
 
         this.html.addEventListener('change', function(){
-            instance.update();
-            if (instance.getStates('image')) {
-                if (this.files.length == 0) {
-                    instance.remove();
-                }
-                instance.checkImageStatus();
-            }
+            instance.update(this.files);
         });
 
         let div = document.createElement('div');
@@ -563,41 +556,61 @@ export class InputFileMaker{
     }
 
     /**
-     * * Set the InputFileMaker Input.
+     * * Set the InputFileMaker Inputs.
      * @memberof InputFileMaker
      */
-    setInput(){
+    setInputs(){
         let instance = this;
+        if (!this.inputs) {
+            this.inputs = [];
+            this.inputQuantity = 0;
+        }
 
-        this.input = new HTMLCreatorJS('input', {
-            properties: {
-                id: this.getProperties('id'),
-                type: 'file',
-                name: this.getProperties('name'),
-                classes: this.getProperties('classes'),
-                accept: this.getProperties('accept'),
-            }, states: {
-                multiple: this.getStates('multiple'),
-        }});
-
-        this.input.getHTML().addEventListener('change', function(){
-            instance.update();
-            if (instance.getStates('image')) {
-                if (this.files.length == 0) {
-                    instance.remove();
-                }
-                instance.checkImageStatus();
-            }
-        });
+        if (this.getStates('generate')) {
+            this.inputQuantity++;
+            this.inputs.push(new HTMLCreatorJS('input', {
+                properties: {
+                    id: `${ this.getProperties('name') }-${ this.inputQuantity }`,
+                    type: 'file',
+                    name: this.getProperties('name'),
+                    classes: this.getProperties('classes'),
+                    accept: this.getProperties('accept'),
+                }, states: {
+                    //
+            }}));
+    
+            this.inputs[this.inputs.length - 1].getHTML().addEventListener('change', function(){
+                instance.update(this.files);
+            });
+        }
     }
 
     /**
-     * * Returns the InputFileMaker Input.
-     * @returns {Input}
+     * * Returns the InputFileMaker Inputs.
+     * @returns {Input[]}
      * @memberof InputFileMaker
      */
-    getInput(){
-        return this.input;
+    getInputs(){
+        return this.inputs;
+    }
+
+    /**
+     * * Removes an Input.
+     * @param {Number} index Input key.
+     * @memberof InputFileMaker
+     */
+    removeInput(index){
+        for (const key in this.getInputs()) {
+            if (Object.hasOwnProperty.call(this.getInputs(), key)) {
+                const input = this.getInputs()[key];
+                if (index == key) {
+                    let parent = input.getHTML().parentNode;
+                    parent.removeChild(input.getHTML());
+                }
+            }
+        }
+        this.getInputs().splice(index, 1);
+        this.getFiles().splice(index, 1);
     }
 
     /**
@@ -618,8 +631,7 @@ export class InputFileMaker{
                 function: InputFileMaker.execute,
                 params: {
                     inputfilemaker: this,
-                },
-        }, innerHTML: ((button.hasOwnProperty('innerHTML')) ? button.innerHTML : new HTMLCreatorJS('span', {
+        }}, innerHTML: ((button.hasOwnProperty('innerHTML')) ? button.innerHTML : new HTMLCreatorJS('span', {
             properties: {
                 //
             }, innerHTML: this.getProperties('text'),
@@ -640,8 +652,6 @@ export class InputFileMaker{
      * @memberof InputFileMaker
      */
     setSpan(){
-        let instance = this;
-
         this.span = new HTMLCreatorJS('span', {
             properties: {
                 id: 'message-1',
@@ -651,7 +661,7 @@ export class InputFileMaker{
         this.span.getHTML().addEventListener('click', function(e){
             e.preventDefault();
             InputFileMaker.execute({
-                inputfilemaker: instance,
+                inputfilemaker: this,
             });
         });
     }
@@ -710,7 +720,7 @@ export class InputFileMaker{
         this.image.getHTML().addEventListener('click', function(e){
             e.preventDefault();
             InputFileMaker.execute({
-                inputfilemaker: instance,
+                inputfilemaker: this,
             });
         });
         this.changeStatus('created', true);
@@ -726,30 +736,24 @@ export class InputFileMaker{
     }
 
     /**
-     * * Update the <input>.
+     * * Check if the Image must be updated or not
+     * @param {Array} files
      * @memberof InputFileMaker
      */
-    update(){
-        if (this.getStates('generate')) {
-            this.files = this.getInput().getHTML().files;
-        } else {
-            this.files = this.getHTML().files;
+    checkImage(files){
+        if (this.getStates('image')) {
+            if (files.length == 0) {
+                this.removeImage();
+            }
+            this.checkImageStatus();
         }
-        if (this.files.length) {
-            this.getSpan().getHTML().innerHTML = this.files[0].name;
-        } else {
-            this.getSpan().getHTML().innerHTML = this.getProperties('notFoundMessage');
-        }
-        let params = this.getCallback().params;
-        params.inputfilemaker = this;
-        this.getCallback().function(params);
     }
     
     /**
      * * Remove the image.
      * @memberof InputFileMaker
      */
-    remove(){
+    removeImage(){
         let parent = this.getHTML().parentNode;
         if (this.getStates('created')) {
             this.changeStatus('created', false);
@@ -759,13 +763,114 @@ export class InputFileMaker{
     }
 
     /**
+     * * Returns the InputFileMaker files.
+     * @returns {Array}
+     * @memberof InputFileMaker
+     */
+    getFiles(){
+        return this.files;
+    }
+
+    /**
+     * * Removes a file.
+     * @param {String} source File source.
+     * @memberof InputFileMaker
+     */
+    removeFile(source){
+        let instance = this;
+        if (FileReader && this.files && this.files.length) {
+            for (const key in this.getFiles()) {
+                if (this.getFiles().hasOwnProperty(key)) {
+                    const file = this.getFiles()[key];
+                    let reader = new FileReader();
+                    
+                    reader.readAsDataURL(file);
+    
+                    reader.onload = function(){
+                        if (source == reader.result) {
+                            instance.removeInput(key);
+                        }
+                    }
+                }
+            }
+        } else {
+            console.warn("Function removeFile it's just for use when InputFileMakerJS works with multiple files on.");
+        }
+    }
+
+    /**
+     * * Update the <input>.
+     * @param {Array} files
+     * @memberof InputFileMaker
+     */
+    update(files){
+        this.checkImage(files);
+        this.saveFiles(files);
+        this.changeSpanText();
+        let params = this.getCallback().params;
+        params.inputfilemaker = this;
+        this.getCallback().function(params);
+    }
+
+    /**
+     * * Save the Input files.
+     * @param {Array} files
+     * @memberof InputFileMaker
+     */
+    saveFiles(files){
+        if (this.getStates('multiple')) {
+            if (!this.files) {
+                this.files = [];
+            }
+            for (const file of files) {
+                this.files.push(file);
+            }
+            this.setNewInput();
+        } else {
+            this.files = files;
+        }
+    }
+
+    /**
+     * * Creates a new Input.
+     * @memberof InputFileMaker
+     */
+    setNewInput(){
+        let parent;
+        if (this.getStates('generate')) {
+            parent = this.getInputs()[this.getInputs().length - 1].getHTML().parentNode;
+        } else {
+            parent = this.getHTML().parentNode;
+        }
+        this.setInputs();
+        parent.appendChild(this.getInputs()[this.getInputs().length - 1].getHTML());
+    }
+
+    /**
+     * * Change the Span inner HTML.
+     * @memberof InputFileMaker
+     */
+    changeSpanText(){
+        if (this.files.length) {
+            if (this.getStates('multiple')) {
+                this.getSpan().getHTML().innerHTML = this.files[this.getInputs().length - 2].name;
+            } else {
+                this.getSpan().getHTML().innerHTML = this.files[0].name;
+            }
+        } else {
+            this.getSpan().getHTML().innerHTML = this.getProperties('notFoundMessage');
+        }
+    }
+
+    /**
      * * Execute the <input> click event.
+     * @static
      * @param {Object} params Execution parameters.
      * @memberof InputFileMaker
      */
-    static execute(params = {}){
+    static execute(params){
         if (params.inputfilemaker.getStates('generate')) {
-            params.inputfilemaker.getInput().getHTML().click();
+            params.inputfilemaker.getInputs()[params.inputfilemaker.getInputs().length - 1].getHTML().click();
         } else {
             params.inputfilemaker.getHTML().click();
         }
