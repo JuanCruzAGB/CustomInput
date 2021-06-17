@@ -1,55 +1,34 @@
-.input-file{
-    display: flex;
-    align-items: center;
-    overflow-x: hidden;
-        flex-wrap: wrap;
+
+/* ? SM */
+input[type="file"].hidden {
+    display: none;
 }
 
-.input-transformed{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    visibility: hidden;
-}
-
-.input-file .input-button{
-    --inputfilemaker-color-one: #222;
-    --inputfilemaker-color-two: #ddd;
-    --shadow-color: #888;
-    display: inline-block;
-    margin: 0;
-    background-color: var(--inputfilemaker-color-one);
-    outline: none;
-    border: none;
-    color: var(--inputfilemaker-color-two);
-    cursor: pointer;
-    padding: .5rem;
-    box-shadow: 3px 3px 8px var(--shadow-color);
-    border-radius: .25rem;
-    margin-right: .5rem;
-    min-width: fit-content;
-}
-
-.input-img{
-    width: 100%;
-    margin-top: .5rem;
-    border-radius: .25rem;
+input[type="file"].hidden:not(:disabled) ~ :where(.input-image, .input-button, .input-message).pointer {
     cursor: pointer;
 }
 
-/* * MD */
-@media(min-width: 768px){
-    /**/
+/* ? MD */
+@media (min-width: 768px) {
+    /*  */
 }
 
-/* * LG */
-@media(min-width: 1024px){
-    /**/
+/* ? LG */
+@media (min-width: 1024px) {
+    /*  */
 }
 
-/* * XL */
-@media(min-width: 1200px){
-    /**/
+/* ? XL */
+@media (min-width: 1200px) {
+    /*  */
+}
+
+/* ? 2XL */
+@media (min-width: 1536px) {
+    /*  */
+}
+
+/* ? 3XL */
+@media (min-width: 1920px) {
+    /*  */
 }

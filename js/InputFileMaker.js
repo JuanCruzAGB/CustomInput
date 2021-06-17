@@ -16,8 +16,8 @@ export class InputFileMaker extends Class {
      * * Creates an instance of InputFileMaker.
      * @param {object} [props] InputFileMaker properties:
      * @param {string} [props.id='input-1'] Input HTML element primary key.
-     * @param {string} [props.notFoundMessage='File not chosen'] Not found message.
-     * @param {string} [props.text='Select file'] Button text.
+     * @param {string} [props.message='File not chosen'] Not found message.
+     * @param {string} [props.button='Select file'] Button button.
      * @param {string[]} [props.accept] Input mimetype accepted.
      * @param {string} [props.name='file'] Input name.
      * @param {object} [props.classes] Input class names.
@@ -38,9 +38,9 @@ export class InputFileMaker extends Class {
      */
     constructor (props = {
         id: 'input-1',
-        notFoundMessage: 'File not chosen',
-        text: 'Select file',
         accept: [],
+        button: 'Select file',
+        message: 'File not chosen',
         name: 'file',
         classes: {
             button: [],
@@ -63,9 +63,9 @@ export class InputFileMaker extends Class {
     }) {
         super({ ...InputFileMaker.props, ...props },{ ...InputFileMaker.state, ...state });
         this.setCallbacks({ ...InputFileMaker.callbacks, ...callbacks });
-        this.setButton();
-        this.setImage();
         this.setInput();
+        this.setImage();
+        this.setButton();
         this.setMessage();
     }
 
@@ -80,18 +80,19 @@ export class InputFileMaker extends Class {
             this.button = new HTMLCreatorJS('button', {
                 props: {
                     id: `${ this.props.id }-button`,
-                    title: this.props.text,
-                    classes: [...this.props.classes.button, 'input-button'],
+                    title: this.props.button,
+                    classes: ((this.props.classes.hasOwnProperty('button') && this.props.classes.button.length) ? [...this.props.classes.button, 'input-button', 'pointer'] : ['input-button', 'pointer']),
                 }, state: {
                     preventDefault: true,
                     disabled: this.state.disabled,
                 }, callback: {
-                    function: instance.click,
+                    function: this.click,
                     params: {
                         inputFileMakerJS: this,
+                        ...this.callbacks.click.params
                 }}, innerHTML: new HTMLCreatorJS('span', {
                     props: {},
-                    innerHTML: this.props.text,
+                    innerHTML: this.props.button,
                 }).html
             });
             this.state.generate.appendChild(this.button.html);
@@ -117,7 +118,7 @@ export class InputFileMaker extends Class {
                     id: `${ this.props.id }-image`,
                     url: this.state.image,
                     name: 'Image genereted with InputFileMakerJS',
-                    classes: [...this.props.classes.image, 'input-img'],
+                    classes: ((this.props.classes.hasOwnProperty('image') && this.props.classes.image.length) ? [...this.props.classes.image, 'input-image', 'pointer'] : ['input-image', 'pointer']),
             }});
             this.image.html.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -152,7 +153,7 @@ export class InputFileMaker extends Class {
                     id: this.props.id,
                     name: this.props.name,
                     type: 'file',
-                    classes: [...this.props.classes.input],
+                    classes: ((this.props.classes.hasOwnProperty('input') && this.props.classes.input.length) ? [...this.props.classes.input, 'hidden'] : ['hidden']),
                     accept: this.props.accept,
                 }, state: {
                     disabled: this.state.disabled
@@ -161,6 +162,7 @@ export class InputFileMaker extends Class {
                         function: this.change,
                         params: {
                             inputFileMakerJS: this,
+                            ...this.callbacks.change.params
             }}}});
             this.state.generate.appendChild(this.input.html);
         }
@@ -182,13 +184,14 @@ export class InputFileMaker extends Class {
             this.message = new HTMLCreatorJS('span', {
                 props: {
                     id: `${ this.props.id }-message`,
-                    classes: [...this.props.classes.message, 'input-text'],
-                }, innerHTML: this.props.notFoundMessage,
+                    classes: ((this.props.classes.hasOwnProperty('message') && this.props.classes.message.length) ? [...this.props.classes.message, 'input-message', 'pointer'] : ['input-message', 'pointer']),
+                }, innerHTML: this.props.message,
             });
             this.message.html.addEventListener('click', function(e) {
                 e.preventDefault();
                 instance.click();
             });
+            this.state.generate.appendChild(this.message.html);
         }
         if (!this.state.generate) {
             this.message = document.querySelector(`${ this.props.id }-message`);
@@ -204,6 +207,7 @@ export class InputFileMaker extends Class {
      * @memberof InputFileMaker
      */
     changeImage () {
+        const instance = this;
         if (this.hasOwnProperty('image')) {
             if (this.files.length === 0) {
                 this.removeImageURL();
@@ -222,15 +226,15 @@ export class InputFileMaker extends Class {
                     }
                 }
 
-                reader.onload = function() {
-                    if (this.state.generate) {
-                        this.image.setProps('url', reader.result);
-                        this.image.html.src = reader.result;
+                reader.onload = function (e) {
+                    if (instance.state.generate) {
+                        instance.image.setProps('url', reader.result);
+                        instance.image.html.src = reader.result;
                     }
-                    if (!this.state.generate) {
-                        this.image.src = reader.result;
+                    if (!instance.state.generate) {
+                        instance.image.src = reader.result;
                     }
-                }
+                };
             }
         }
     }
@@ -241,9 +245,9 @@ export class InputFileMaker extends Class {
      */
     changeText () {
         if (this.files.length) {
-            this.message.innerHTML = this.files[0].name;
+            this.message.html.innerHTML = this.files[0].name;
         } else {
-            this.message.innerHTML = this.props.notFoundMessage;
+            this.message.html.innerHTML = this.props.message;
         }
     }
     
@@ -267,13 +271,23 @@ export class InputFileMaker extends Class {
      * @memberof InputFileMaker
      */
     change (params = {}) {
-        this.files = [...params.files];
-        this.changeImage();
-        this.changeText();
-        this.execute('change', {
-            inputFileMakerJS: this,
-            ...params
-        });
+        if (!params.hasOwnProperty('inputFileMakerJS')) {
+            this.files = [...params.files];
+            this.changeImage();
+            this.changeText();
+            this.execute('change', {
+                inputFileMakerJS: this,
+                ...(Object.keys(params).length ? { ...this.callbacks.change.params, ...params } : { ...this.callbacks.change.params }),
+            });
+        }
+        if (params.hasOwnProperty('inputFileMakerJS')) {
+            params.inputFileMakerJS.files = [...params.files];
+            params.inputFileMakerJS.changeImage();
+            params.inputFileMakerJS.changeText();
+            params.inputFileMakerJS.execute('change', {
+                ...params
+            });
+        }
     }
 
     /**
@@ -282,15 +296,27 @@ export class InputFileMaker extends Class {
      * @memberof InputFileMaker
      */
     click (params = {}) {
-        if (this.state.generate) {
-            this.input.html.click();
-        } else {
-            this.input.click();
+        if (!params.hasOwnProperty('inputFileMakerJS')) {
+            if (this.state.generate) {
+                this.input.html.click();
+            } else {
+                this.input.click();
+            }
+            this.execute('click', {
+                inputFileMakerJS: this,
+                ...(Object.keys(params).length ? { ...this.callbacks.click.params, ...params } : { ...this.callbacks.click.params }),
+            })
         }
-        this.execute('click', {
-            inputFileMakerJS: this,
-            ...params
-        })
+        if (params.hasOwnProperty('inputFileMakerJS')) {
+            if (params.inputFileMakerJS.state.generate) {
+                params.inputFileMakerJS.input.html.click();
+            } else {
+                params.inputFileMakerJS.input.click();
+            }
+            params.inputFileMakerJS.execute('click', {
+                ...params
+            })
+        }
     }
 
     /**
@@ -299,15 +325,15 @@ export class InputFileMaker extends Class {
      */
     static props = {
         id: 'input-1',
-        notFoundMessage: 'File not chosen',
-        text: 'Select file',
+        message: 'File not chosen',
+        button: 'Select file',
         accept: [],
         name: 'file',
         classes: {
             button: [],
             image: [],
             input: [],
-            text: [],
+            button: [],
         },
     };
     
