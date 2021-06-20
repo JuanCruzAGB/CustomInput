@@ -8,6 +8,10 @@ input[type="file"].hidden:not(:disabled) ~ :where(.input-image, .input-button, .
     cursor: pointer;
 }
 
+.input-message {
+    pointer-events: none;
+}
+
 /* ? MD */
 @media (min-width: 768px) {
     /*  */

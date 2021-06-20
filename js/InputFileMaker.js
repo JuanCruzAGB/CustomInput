@@ -215,14 +215,30 @@ export class InputFileMaker extends Class {
             if (FileReader && this.files.length) {
                 let reader = new FileReader();
 
-                if (this.files[0].type === 'image/png' || this.files[0].type === 'image/jpeg') {
-                    reader.readAsDataURL(this.files[0]);
-                    if (this.state.generate) {
-                        this.image.setProps('url', false);
-                        this.image.html.src = false;
+                if (this.props.accept.length) {
+                    for (const type of this.props.accept) {
+                        if (this.files[0].type === type) {
+                            reader.readAsDataURL(this.files[0]);
+                            if (this.state.generate) {
+                                this.image.setProps('url', false);
+                                this.image.html.src = false;
+                            }
+                            if (!this.state.generate) {
+                                this.image.src = false;
+                            }
+                        }
                     }
-                    if (!this.state.generate) {
-                        this.image.src = false;
+                }
+                if (!this.props.accept.length) {
+                    if (this.files[0].type === 'image/png' || this.files[0].type === 'image/jpeg') {
+                        reader.readAsDataURL(this.files[0]);
+                        if (this.state.generate) {
+                            this.image.setProps('url', false);
+                            this.image.html.src = false;
+                        }
+                        if (!this.state.generate) {
+                            this.image.src = false;
+                        }
                     }
                 }
 
