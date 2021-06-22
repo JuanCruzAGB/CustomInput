@@ -116,7 +116,7 @@ export class InputFileMaker extends Class {
             this.image = new HTMLCreatorJS('img', {
                 props: {
                     id: `${ this.props.id }-image`,
-                    url: this.state.image,
+                    url: (this.state.image ? this.state.image : "/submodules/InputFileMakerJS/img/default.png"),
                     name: 'Image genereted with InputFileMakerJS',
                     classes: ((this.props.classes.hasOwnProperty('image') && this.props.classes.image.length) ? [...this.props.classes.image, 'input-image', 'pointer'] : ['input-image', 'pointer']),
             }});
