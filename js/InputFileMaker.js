@@ -116,10 +116,13 @@ export class InputFileMaker extends Class {
             this.image = new HTMLCreatorJS('img', {
                 props: {
                     id: `${ this.props.id }-image`,
-                    url: (this.state.image ? this.state.image : "/submodules/InputFileMakerJS/img/default.png"),
+                    url: this.state.image,
                     name: 'Image genereted with InputFileMakerJS',
                     classes: ((this.props.classes.hasOwnProperty('image') && this.props.classes.image.length) ? [...this.props.classes.image, 'input-image', 'pointer'] : ['input-image', 'pointer']),
             }});
+            if (!this.state.image) {
+                this.hideImage();
+            }
             this.image.html.addEventListener('click', function(e) {
                 e.preventDefault();
                 instance.click();
@@ -211,34 +214,25 @@ export class InputFileMaker extends Class {
         if (this.hasOwnProperty('image')) {
             if (this.files.length === 0) {
                 this.removeImageURL();
+                this.hideImage();
             }
             if (FileReader && this.files.length) {
                 let reader = new FileReader();
 
                 if (this.props.accept.length) {
+                    this.removeImageURL();
+                    this.hideImage();
                     for (const type of this.props.accept) {
                         if (this.files[0].type === type) {
                             reader.readAsDataURL(this.files[0]);
-                            if (this.state.generate) {
-                                this.image.setProps('url', false);
-                                this.image.html.src = false;
-                            }
-                            if (!this.state.generate) {
-                                this.image.src = false;
-                            }
                         }
                     }
                 }
                 if (!this.props.accept.length) {
+                    this.removeImageURL();
+                    this.hideImage();
                     if (this.files[0].type === 'image/png' || this.files[0].type === 'image/jpeg') {
                         reader.readAsDataURL(this.files[0]);
-                        if (this.state.generate) {
-                            this.image.setProps('url', false);
-                            this.image.html.src = false;
-                        }
-                        if (!this.state.generate) {
-                            this.image.src = false;
-                        }
                     }
                 }
 
@@ -250,6 +244,7 @@ export class InputFileMaker extends Class {
                     if (!instance.state.generate) {
                         instance.image.src = reader.result;
                     }
+                    instance.showImage();
                 };
             }
         }
@@ -265,6 +260,22 @@ export class InputFileMaker extends Class {
         } else {
             this.message.html.innerHTML = this.props.message;
         }
+    }
+    
+    /**
+     * * Hide the image HTML Element.
+     * @memberof InputFileMaker
+     */
+    hideImage () {
+        this.image.html.classList.add('hidden');
+    }
+    
+    /**
+     * * Show the image HTML Element.
+     * @memberof InputFileMaker
+     */
+    showImage () {
+        this.image.html.classList.remove('hidden');
     }
     
     /**
