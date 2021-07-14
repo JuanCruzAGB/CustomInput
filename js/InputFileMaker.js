@@ -2,7 +2,7 @@
 import Class from "../../JuanCruzAGB/js/Class.js";
 
 // ? External repository
-import { HTMLCreator as HTMLCreatorJS } from "../../HTMLCreatorJS/js/HTMLCreator.js";
+import { Html } from "../../HTMLCreatorJS/js/HTMLCreator.js";
 
 /**
  * * InputFileMaker makes an excellent input type file.
@@ -77,7 +77,7 @@ export class InputFileMaker extends Class {
     setButton () {
         const instance = this;
         if (this.state.generate) {
-            this.button = new HTMLCreatorJS('button', {
+            this.button = new Html('button', {
                 props: {
                     id: `${ this.props.id }-button`,
                     title: this.props.button,
@@ -90,7 +90,7 @@ export class InputFileMaker extends Class {
                     params: {
                         inputFileMakerJS: this,
                         ...this.callbacks.click.params
-                }}, innerHTML: new HTMLCreatorJS('span', {
+                }}, innerHTML: new Html('span', {
                     props: {},
                     innerHTML: this.props.button,
                 }).html
@@ -113,7 +113,7 @@ export class InputFileMaker extends Class {
     setImage () {
         const instance = this;
         if (this.state.generate) {
-            this.image = new HTMLCreatorJS('img', {
+            this.image = new Html('img', {
                 props: {
                     id: `${ this.props.id }-image`,
                     url: this.state.image,
@@ -151,7 +151,7 @@ export class InputFileMaker extends Class {
     setInput () {
         const instance = this;
         if (this.state.generate) {
-            this.input = new HTMLCreatorJS('input', {
+            this.input = new Html('input', {
                 props: {
                     id: this.props.id,
                     name: this.props.name,
@@ -184,7 +184,7 @@ export class InputFileMaker extends Class {
     setMessage () {
         const instance = this;
         if (this.state.generate) {
-            this.message = new HTMLCreatorJS('span', {
+            this.message = new Html('span', {
                 props: {
                     id: `${ this.props.id }-message`,
                     classes: ((this.props.classes.hasOwnProperty('message') && this.props.classes.message.length) ? [...this.props.classes.message, 'input-message', 'pointer'] : ['input-message', 'pointer']),
