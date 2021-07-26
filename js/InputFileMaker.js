@@ -119,11 +119,12 @@ export class InputFileMaker extends Class {
                     url: this.state.image,
                     name: 'Image genereted with InputFileMakerJS',
                     classes: ((this.props.classes.hasOwnProperty('image') && this.props.classes.image.length) ? [...this.props.classes.image, 'input-image', 'pointer'] : ['input-image', 'pointer']),
-            }});
+                }
+            });
             if (!this.state.image) {
                 this.hideImage();
             }
-            this.image.html.addEventListener('click', function(e) {
+            this.image.html.addEventListener('click', function (e) {
                 e.preventDefault();
                 instance.click();
             });
@@ -134,7 +135,7 @@ export class InputFileMaker extends Class {
         }
         if (!this.state.generate) {
             this.image = document.querySelector(`${ this.props.id }-image`);
-            this.image.addEventListener('click', function(e) {
+            this.image.addEventListener('click', function (e) {
                 e.preventDefault();
                 instance.click();
             });
@@ -190,7 +191,7 @@ export class InputFileMaker extends Class {
                     classes: ((this.props.classes.hasOwnProperty('message') && this.props.classes.message.length) ? [...this.props.classes.message, 'input-message', 'pointer'] : ['input-message', 'pointer']),
                 }, innerHTML: this.props.message,
             });
-            this.message.html.addEventListener('click', function(e) {
+            this.message.html.addEventListener('click', function (e) {
                 e.preventDefault();
                 instance.click();
             });
@@ -198,7 +199,7 @@ export class InputFileMaker extends Class {
         }
         if (!this.state.generate) {
             this.message = document.querySelector(`${ this.props.id }-message`);
-            this.message.addEventListener('click', function(e) {
+            this.message.addEventListener('click', function (e) {
                 e.preventDefault();
                 instance.click();
             });
