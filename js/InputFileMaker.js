@@ -2,7 +2,7 @@
 import Class from "../../JuanCruzAGB/js/Class.js";
 
 // ? External repository
-import { Html } from "../../HTMLCreatorJS/js/HTMLCreator.js";
+import { default as Html } from "../../HTMLCreatorJS/js/HTMLCreator.js";
 
 /**
  * * InputFileMaker makes an excellent input type file.
@@ -20,11 +20,11 @@ export class InputFileMaker extends Class {
      * @param {string} [props.button='Select file'] Button button.
      * @param {string[]} [props.accept] Input mimetype accepted.
      * @param {string} [props.name='file'] Input name.
-     * @param {object} [props.classes] Input class names.
-     * @param {string[]} [props.classes.button] Button class names.
-     * @param {string[]} [props.classes.image] Image class names.
-     * @param {string[]} [props.classes.input] Input class names.
-     * @param {string[]} [props.classes.message] Text class names.
+     * @param {object} [props.classList] Input class names.
+     * @param {string[]} [props.classList.button] Button class names.
+     * @param {string[]} [props.classList.image] Image class names.
+     * @param {string[]} [props.classList.input] Input class names.
+     * @param {string[]} [props.classList.message] Text class names.
      * @param {object} [states] InputFileMaker states:
      * @param {HTMLElement|false} [states.generate=false] If the Input has to be generated.
      * @param {boolean} [states.disabled=false] If the Input has to be disabled.
@@ -42,7 +42,7 @@ export class InputFileMaker extends Class {
         button: 'Select file',
         message: 'File not chosen',
         name: 'file',
-        classes: {
+        classList: {
             button: [],
             image: [],
             input: [],
@@ -81,18 +81,22 @@ export class InputFileMaker extends Class {
                 props: {
                     id: `${ this.props.id }-button`,
                     title: this.props.button,
-                    classes: ((this.props.classes.hasOwnProperty('button') && this.props.classes.button.length) ? [...this.props.classes.button, 'input-button', 'pointer'] : ['input-button', 'pointer']),
+                    classList: ((this.props.classList.hasOwnProperty('button') && this.props.classList.button.length) ? [...this.props.classList.button, 'input-button', 'pointer'] : ['input-button', 'pointer']),
                 }, state: {
                     preventDefault: true,
                     disabled: this.state.disabled,
-                }, callback: {
-                    function: this.click,
-                    params: {
-                        inputFileMakerJS: this,
-                        ...this.callbacks.click.params
-                }}, innerHTML: new Html('span', {
-                    props: {},
-                    innerHTML: this.props.button,
+                }, callbacks: {
+                    click: {
+                        function: this.click,
+                        params: {
+                            ...this.callbacks.click.params,
+                            inputFileMakerJS: this,
+                        },
+                    },
+                }, children: new Html('span', {
+                    props: {
+                        // 
+                    }, children: this.props.button,
                 }).html
             });
             this.state.generate.appendChild(this.button.html);
@@ -118,8 +122,8 @@ export class InputFileMaker extends Class {
                     id: `${ this.props.id }-image`,
                     url: this.state.image,
                     name: 'Image genereted with InputFileMakerJS',
-                    classes: ((this.props.classes.hasOwnProperty('image') && this.props.classes.image.length) ? [...this.props.classes.image, 'input-image', 'pointer'] : ['input-image', 'pointer']),
-                }
+                    classList: ((this.props.classList.hasOwnProperty('image') && this.props.classList.image.length) ? [...this.props.classList.image, 'input-image', 'pointer'] : ['input-image', 'pointer']),
+                },
             });
             if (!this.state.image) {
                 this.hideImage();
@@ -157,7 +161,7 @@ export class InputFileMaker extends Class {
                     id: this.props.id,
                     name: this.props.name,
                     type: 'file',
-                    classes: ((this.props.classes.hasOwnProperty('input') && this.props.classes.input.length) ? [...this.props.classes.input, 'hidden'] : ['hidden']),
+                    classList: ((this.props.classList.hasOwnProperty('input') && this.props.classList.input.length) ? [...this.props.classList.input, 'hidden'] : ['hidden']),
                     accept: this.props.accept,
                 }, state: {
                     disabled: this.state.disabled
@@ -167,7 +171,10 @@ export class InputFileMaker extends Class {
                         params: {
                             inputFileMakerJS: this,
                             ...this.callbacks.change.params
-            }}}});
+                        },
+                    },
+                },
+            });
             this.state.generate.appendChild(this.input.html);
         }
         if (!this.state.generate) {
@@ -188,8 +195,8 @@ export class InputFileMaker extends Class {
             this.message = new Html('span', {
                 props: {
                     id: `${ this.props.id }-message`,
-                    classes: ((this.props.classes.hasOwnProperty('message') && this.props.classes.message.length) ? [...this.props.classes.message, 'input-message', 'pointer'] : ['input-message', 'pointer']),
-                }, innerHTML: this.props.message,
+                    classList: ((this.props.classList.hasOwnProperty('message') && this.props.classList.message.length) ? [...this.props.classList.message, 'input-message', 'pointer'] : ['input-message', 'pointer']),
+                }, children: this.props.message,
             });
             this.message.html.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -357,7 +364,7 @@ export class InputFileMaker extends Class {
         button: 'Select file',
         accept: [],
         name: 'file',
-        classes: {
+        classList: {
             button: [],
             image: [],
             input: [],
