@@ -9,7 +9,7 @@ import { default as Html } from "../../HTMLCreatorJS/js/HTMLCreator.js";
  * @export
  * @class InputFileMaker
  * @extends Class
- * @author Juan Cruz Armentia <juancarmentia@gmail.com>
+ * @author Juan Cruz Armentia <juan.cruz.armentia@gmail.com>
  */
 export class InputFileMaker extends Class {
     /**
