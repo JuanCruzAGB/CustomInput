@@ -1,0 +1,26 @@
+{
+  "name": "@juancruzagb/custominput",
+  "version": "1.0.0",
+  "description": "HTMLCreatorJS Custom Inputs extension",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanCruzAGB/CustomInputJS.git"
+  },
+  "keywords": [
+    "JuanCruzAGB",
+    "Javascript",
+    "Html",
+    "Input"
+  ],
+  "author": "JuanCruzAGB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuanCruzAGB/CustomInputJS/issues"
+  },
+  "homepage": "https://github.com/JuanCruzAGB/CustomInputJS#readme"
+}
