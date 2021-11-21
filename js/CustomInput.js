@@ -1,7 +1,7 @@
-// ? HTMLCreatorJS repository
+// ? HTMLCreator repository
 import Html from "juancruzagb/htmlcreator/js/Core/Html";
 
-// ? CustomInputJS repository
+// ? CustomInput repository
 import File from "juancruzagb/custominput/js/Inputs/File/File";
 
 /**

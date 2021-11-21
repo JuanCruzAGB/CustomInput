@@ -1,8 +1,8 @@
-// ? JuanCruzAGB | CustomInputJS repository
+// ? JuanCruzAGB | CustomInput repository
 import CustomInput from "juancruzagb/custominput/js/CustomInput";
 
 /**
- * @module CustomInputJS
+ * @module CustomInput
  */
 export { CustomInput };
 export default CustomInput;

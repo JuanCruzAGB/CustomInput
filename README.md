@@ -1,1 +1,1 @@
-# InputFileMakerJS
+# InputFileMaker

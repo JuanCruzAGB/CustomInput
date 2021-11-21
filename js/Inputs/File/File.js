@@ -1,7 +1,7 @@
 // ? JuanCruzAGB repository
 import Class from "juancruzagb/src/js/Class";
 
-// ? HTMLCreatorJS repository
+// ? HTMLCreator repository
 import Button from "juancruzagb/htmlcreator/js/Buttons/Button";
 import Input from "juancruzagb/htmlcreator/js/Buttons/Input";
 import Span from "juancruzagb/htmlcreator/js/Texts/Span";
@@ -74,7 +74,7 @@ export default class File extends Class {
             props: {
                 classList: [],
                 id: 'image-1',
-                name: 'Image genereted with HTMLCreatorJS',
+                name: 'Image genereted with HTMLCreator',
                 url: false,
             }, state: {
                 id: false,
