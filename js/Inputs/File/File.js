@@ -1,11 +1,11 @@
 // ? JuanCruzAGB repository
-import Class from "juancruzagb/src/js/Class";
+import Class from "@juancruzagb/src/js/Class";
 
 // ? HTMLCreator repository
-import Button from "juancruzagb/htmlcreator/js/Buttons/Button";
-import Input from "juancruzagb/htmlcreator/js/Buttons/Input";
-import Span from "juancruzagb/htmlcreator/js/Texts/Span";
-import Image from "juancruzagb/htmlcreator/js/Visuals/Image";
+import Button from "@juancruzagb/htmlcreator/js/Buttons/Button";
+import Input from "@juancruzagb/htmlcreator/js/Buttons/Input";
+import Span from "@juancruzagb/htmlcreator/js/Texts/Span";
+import Image from "@juancruzagb/htmlcreator/js/Visuals/Image";
 
 /**
  * * File creates an excellent <input type='file'>.

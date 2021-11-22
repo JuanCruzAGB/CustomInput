@@ -1,8 +1,8 @@
 // ? HTMLCreator repository
-import Html from "juancruzagb/htmlcreator/js/Core/Html";
+import Html from "@juancruzagb/htmlcreator/js/Core/Html";
 
 // ? CustomInput repository
-import File from "juancruzagb/custominput/js/Inputs/File/File";
+import File from "@juancruzagb/custominput/js/Inputs/File/File";
 
 /**
  * * CustomInput makes an excellent input.
