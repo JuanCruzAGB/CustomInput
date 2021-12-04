@@ -1,5 +1,5 @@
 // ? JuanCruzAGB | CustomInput repository
-import CustomInput from "@juancruzagb/custominput/js/CustomInput";
+import CustomInput from "@juancruzagb/custominput/js/CustomInput.js";
 
 /**
  * @module CustomInput
