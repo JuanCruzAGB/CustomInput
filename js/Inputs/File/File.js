@@ -48,10 +48,10 @@ export default class File extends Class {
             id: false,
         }, callbacks: {
             change: {
-                function: (params) => { /* console.log(params) */ },
+                function: params => { /* console.log(params) */ },
                 params: {},
             }, click: {
-                function: (params) => { /* console.log(params) */ },
+                function: params => { /* console.log(params) */ },
                 params: {},
             },
         },  parentNode: false,
@@ -66,7 +66,7 @@ export default class File extends Class {
                 preventDefault: true,
             }, callbacks: {
                 click: {
-                    function: (params) => { /* console.log(params) */ },
+                    function: params => { /* console.log(params) */ },
                     params: {},
                 },
             }, children: false,
@@ -80,7 +80,7 @@ export default class File extends Class {
                 id: false,
             }, callbacks: {
                 click: {
-                    function: (params) => { /* console.log(params) */ },
+                    function: params => { /* console.log(params) */ },
                     params: {},
                 },
             },
@@ -92,7 +92,7 @@ export default class File extends Class {
                 id: false,
             }, callbacks: {
                 click: {
-                    function: (params) => { /* console.log(params) */ },
+                    function: params => { /* console.log(params) */ },
                     params: {},
                 },
             }, children: false,
@@ -155,7 +155,7 @@ export default class File extends Class {
             data.callbacks = {};
         }
         data.callbacks.click = {
-            function: (params) => { this.click(params) },
+            function: params => { this.click(params) },
         };
         this.button = new Button(data);
     }
@@ -173,7 +173,7 @@ export default class File extends Class {
             data.callbacks = {};
         }
         data.callbacks.click = {
-            function: (params) => { this.click(params) },
+            function: params => { this.click(params) },
         };
         console.log(data);
         this.image = new Image(data);
@@ -197,7 +197,7 @@ export default class File extends Class {
             data.callbacks = {};
         }
         data.callbacks.change = {
-            function: (params) => { this.change(params) },
+            function: params => { this.change(params) },
         };
         this.input = new Input(data);
     }
@@ -215,7 +215,7 @@ export default class File extends Class {
             data.callbacks = {};
         }
         data.callbacks.click = {
-            function: (params) => { this.click(params) },
+            function: params => { this.click(params) },
         };
         this.message = new Span(data);
     }
@@ -303,10 +303,10 @@ export default class File extends Class {
      */
     static callbacks = {
         change: {
-            function: (params) => { /* console.log(params) */ },
+            function: params => { /* console.log(params) */ },
             params: {}
         }, click: {
-            function: (params) => { /* console.log(params) */ },
+            function: params => { /* console.log(params) */ },
             params: {}
         },
     }
